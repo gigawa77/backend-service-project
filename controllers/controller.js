@@ -1,6 +1,6 @@
 const app = require("../app");
 const { getTopicData } = require("../models/model");
-// const fs = require("fs/promises");
+const endpoints = require("../endpoints.json");
 
 exports.getHealthCheck = (req, res, next) => {
   res.status(200).send({ msg: "Server online" });
@@ -14,4 +14,6 @@ exports.getTopics = (req, res, next) => {
     .catch(next);
 };
 
-// module.exports = getHealthCheck;
+exports.getEndpoints = (req, res, next) => {
+  res.status(200).send({ endpoints });
+};

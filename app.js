@@ -1,6 +1,10 @@
 const express = require("express");
 
-const { getHealthCheck, getTopics } = require("./controllers/controller");
+const {
+  getHealthCheck,
+  getTopics,
+  getEndpoints,
+} = require("./controllers/controller");
 
 const app = express();
 
@@ -9,6 +13,8 @@ const app = express();
 app.get("/api/healthcheck", getHealthCheck);
 
 app.get("/api/topics", getTopics);
+
+app.get("/api", getEndpoints);
 
 app.all("*", (req, res, next) => {
   res.status(404).send({ message: "Endpoint not found" });

@@ -3,6 +3,7 @@ const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 const request = require("supertest");
 const app = require("../app");
+const endpoints = require("../endpoints.json");
 
 afterAll(() => {
   return db.end();
@@ -24,7 +25,16 @@ describe("/api/healthcheck", () => {
   });
 });
 
-// describe("/api/")
+describe("/api", () => {
+  test("GET 200: Should respond with a list of valid endpoints", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.endpoints).toEqual(endpoints);
+      });
+  });
+});
 
 describe("/api/topics", () => {
   test("GET 200: Should respond with an array of topics", () => {
