@@ -1,7 +1,4 @@
-// const { promises } = require("supertest/lib/test");
 const db = require("../db/connection");
-const fs = require("fs/promises");
-// const format = require("pg-format");
 
 exports.getTopicData = () => {
   return db
@@ -13,5 +10,3 @@ exports.getTopicData = () => {
       return rows;
     });
 };
-
-// function getTopics(req, res, next) {}
