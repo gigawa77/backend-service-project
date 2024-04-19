@@ -41,3 +41,17 @@ exports.getArticles = () => {
       return rows;
     });
 };
+
+exports.getComments = (id) => {
+  return db
+    .query(
+      `
+  SELECT * FROM comments
+  WHERE article_id = $1
+  `,
+      [id]
+    )
+    .then(({ rows }) => {
+      return rows;
+    });
+};

@@ -112,7 +112,6 @@ describe("/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        console.log(body.articles);
         expect(body.articles.length).toBe(13);
         body.articles.forEach((article) =>
           expect(article).toMatchObject({
@@ -126,6 +125,27 @@ describe("/api/articles", () => {
             comment_count: expect.any(Number),
           })
         );
+      });
+  });
+});
+
+describe("/api/articles/:article_id/comments", () => {
+  test("GET 200: Should respond with all comments from given article id", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        console.log(body.comments);
+        expect(body.comments.length).toBe(11);
+      });
+  });
+  test("GET 400: Should return a 400 when given an invalid id", () => {
+    return request(app)
+      .get("/api/articles/abc/comments")
+      .expect(400)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("Bad request");
       });
   });
 });

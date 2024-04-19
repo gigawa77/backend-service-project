@@ -3,6 +3,7 @@ const {
   getTopicData,
   getCorrectArticle,
   getArticles,
+  getComments,
 } = require("../models/model");
 const endpoints = require("../endpoints.json");
 
@@ -32,9 +33,16 @@ exports.getArticleId = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-
   getArticles().then((articles) => {
     res.status(200).send({ articles });
   });
+};
 
+exports.getCommentsById = (req, res, next) => {
+  const id = req.params.article_id;
+  getComments(id)
+    .then((comments) => {
+      res.status(200).send({ comments });
+    })
+    .catch(next);
 };
