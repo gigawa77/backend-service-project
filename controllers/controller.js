@@ -1,5 +1,9 @@
 const app = require("../app");
-const { getTopicData, getCorrectArticle } = require("../models/model");
+const {
+  getTopicData,
+  getCorrectArticle,
+  getArticles,
+} = require("../models/model");
 const endpoints = require("../endpoints.json");
 
 exports.getHealthCheck = (req, res, next) => {
@@ -25,4 +29,10 @@ exports.getArticleId = (req, res, next) => {
       res.status(200).send({ article });
     })
     .catch(next);
+};
+
+exports.getAllArticles = (req, res, next) => {
+  getArticles().then((articles) => {
+    res.status(200).send({ articles });
+  });
 };
