@@ -112,6 +112,7 @@ describe("/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
+        console.log(body, "BODY");
         expect(body.articles.length).toBe(13);
         body.articles.forEach((article) =>
           expect(article).toMatchObject({
@@ -125,6 +126,64 @@ describe("/api/articles", () => {
             comment_count: expect.any(Number),
           })
         );
+      });
+  });
+  test("GET 200: Should return an array of all articles that match the specified query", () => {
+    return request(app)
+      .get("/api/articles?topic=mitch")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toBe(12);
+        body.articles.forEach((article) =>
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          })
+        );
+      });
+  });
+  test("GET 200: Should return an array of all articles that match the specified query", () => {
+    return request(app)
+      .get("/api/articles?topic=cats")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.articles.length).toBe(1);
+        body.articles.forEach((article) =>
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number),
+          })
+        );
+      });
+  });
+  test("GET 400: Should return 400 if given an invalid query", () => {
+    return request(app)
+      .get("/api/articles?topic=hello")
+      .expect(400)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("Invalid query value");
+      });
+  });
+  test("GET 404: Should return 404 no articles are found", () => {
+    return request(app)
+      .get("/api/articles?topic=test")
+      .expect(404)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("not found");
       });
   });
 });
@@ -359,7 +418,6 @@ describe("/api/users", () => {
       .expect(200)
       .then(({ body }) => {
         const { users } = body;
-        console.log(users);
         expect(users.length).toBe(4);
         users.forEach((user) => {
           expect(user).toMatchObject({

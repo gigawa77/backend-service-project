@@ -87,7 +87,7 @@
   },
   "GET /api/users": {
     "description": "returns all users",
-    "queries": ["name", "username"],
+    "queries": [],
     "exampleResponse": {
       "users": [
         {

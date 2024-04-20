@@ -37,9 +37,12 @@ exports.getArticleId = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  getArticles().then((articles) => {
-    res.status(200).send({ articles });
-  });
+  const { topic } = req.query;
+  getArticles(topic)
+    .then((articles) => {
+      res.status(200).send({ articles });
+    })
+    .catch(next);
 };
 
 exports.getCommentsById = (req, res, next) => {
