@@ -73,7 +73,6 @@ describe("/api/articles/:article_id", () => {
       .expect(200)
       .then(({ body }) => {
         const { article } = body;
-        console.log(article);
         expect(article).toMatchObject([
           {
             author: expect.any(String),
@@ -114,7 +113,6 @@ describe("/api/articles", () => {
       .get("/api/articles")
       .expect(200)
       .then(({ body }) => {
-        console.log(body, "BODY");
         expect(body.articles.length).toBe(13);
         body.articles.forEach((article) =>
           expect(article).toMatchObject({
