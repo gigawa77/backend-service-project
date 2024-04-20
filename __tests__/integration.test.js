@@ -307,3 +307,27 @@ describe("/api/articles/:article_id", () => {
       });
   });
 });
+
+describe("/api/comments/:comment_id", () => {
+  test("DELETE 204: Should return a 204 when comment is successfully deleted", () => {
+    return request(app).delete("/api/comments/1").expect(204);
+  });
+  test("DELETE 404: Should reurn a 404 when comment id isn't found", () => {
+    return request(app)
+      .delete("/api/comments/999")
+      .expect(404)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("comment not found");
+      });
+  });
+  test("DELETE 404: Should return a 404 when given an invalid comment id", () => {
+    return request(app)
+      .delete("/api/comments/abc")
+      .expect(400)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("Bad request");
+      });
+  });
+});

@@ -6,6 +6,7 @@ const {
   getComments,
   insertComment,
   updateArticleVotes,
+  deleteCommentById,
 } = require("../models/model");
 const endpoints = require("../endpoints.json");
 
@@ -68,6 +69,15 @@ exports.updateVotes = (req, res, next) => {
   updateArticleVotes(votes, id)
     .then((article) => {
       res.status(200).send({ article });
+    })
+    .catch(next);
+};
+
+exports.deleteComment = (req, res, next) => {
+  const commentId = req.params.comment_id;
+  deleteCommentById(commentId)
+    .then(() => {
+      res.sendStatus(204);
     })
     .catch(next);
 };
