@@ -1,4 +1,5 @@
 const db = require("../db/connection");
+const { commentData } = require("../db/data/test-data");
 
 exports.getTopicData = () => {
   return db
@@ -54,5 +55,23 @@ exports.getComments = (id) => {
     )
     .then(({ rows }) => {
       return rows;
+    });
+};
+
+exports.insertComment = (comment, id) => {
+  comment.article_id = id;
+  return db
+    .query(
+      `
+      INSERT INTO comments 
+      (author, body, article_id)
+      VALUES
+      ($1, $2, $3)
+      RETURNING *;
+      `,
+      [comment.username, comment.body, comment.article_id]
+    )
+    .then(({ rows }) => {
+      return rows[0];
     });
 };

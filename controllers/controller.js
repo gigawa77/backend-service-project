@@ -4,6 +4,7 @@ const {
   getCorrectArticle,
   getArticles,
   getComments,
+  insertComment,
 } = require("../models/model");
 const endpoints = require("../endpoints.json");
 
@@ -43,6 +44,19 @@ exports.getCommentsById = (req, res, next) => {
   getComments(id)
     .then((comments) => {
       res.status(200).send({ comments });
+    })
+    .catch(next);
+};
+
+exports.postNewComment = (req, res, next) => {
+  const comment = req.body;
+  const id = req.params.article_id;
+  if (!comment.body) {
+    res.status(400).send({ message: "comment is empty" });
+  }
+  insertComment(comment, id)
+    .then((comment) => {
+      res.status(201).send({ comment });
     })
     .catch(next);
 };

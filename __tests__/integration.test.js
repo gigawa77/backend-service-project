@@ -4,7 +4,7 @@ const data = require("../db/data/test-data");
 const request = require("supertest");
 const app = require("../app");
 const endpoints = require("../endpoints.json");
-const articles = require("../db/data/test-data/articles");
+require("jest-sorted");
 
 afterAll(() => {
   return db.end();
@@ -135,8 +135,25 @@ describe("/api/articles/:article_id/comments", () => {
       .get("/api/articles/1/comments")
       .expect(200)
       .then(({ body }) => {
-        console.log(body.comments);
         expect(body.comments.length).toBe(11);
+        body.comments.forEach((comment) => {
+          expect(comment).toMatchObject({
+            comment_id: expect.any(Number),
+            body: expect.any(String),
+            article_id: expect.any(Number),
+            author: expect.any(String),
+            votes: expect.any(Number),
+            created_at: expect.any(String),
+          });
+        });
+      });
+  });
+  test("GET 200: Should respond with an empty array if given article has no comments", () => {
+    return request(app)
+      .get("/api/articles/2/comments")
+      .expect(200)
+      .then(({ body }) => {
+        expect(body.comments.length).toBe(0);
       });
   });
   test("GET 400: Should return a 400 when given an invalid id", () => {
@@ -146,6 +163,89 @@ describe("/api/articles/:article_id/comments", () => {
       .then(({ body }) => {
         const { message } = body;
         expect(message).toBe("Bad request");
+      });
+  });
+  test("GET 200: Should return comments in descending order", () => {
+    return request(app)
+      .get("/api/articles/1/comments")
+      .expect(200)
+      .then(({ body }) => {
+        const { comments } = body;
+        expect(comments).toBeSortedBy("created_at", { descending: true });
+      });
+  });
+});
+
+describe("/api/articles/:article_id/comments", () => {
+  test("POST 201: Should add new comment to comment database and return it", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "Hey, icellusedkars here",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(201)
+      .then(({ body }) => {
+        const { comment } = body;
+        expect(comment.author).toBe("icellusedkars");
+        expect(comment.body).toBe("Hey, icellusedkars here");
+      });
+  });
+  test("POST 404: Should return 404 when article id isn't found", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "Hey, icellusedkars here",
+    };
+    return request(app)
+      .post("/api/articles/999/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("not found");
+      });
+  });
+  test("POST 404: Should return 404 if author isn't found", () => {
+    const newComment = {
+      username: "glimp",
+      body: "Hey, glimp here",
+    };
+    return request(app)
+      .post("/api/articles/1/comments")
+      .send(newComment)
+      .expect(404)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("not found");
+      });
+  });
+  test("POST 400: Should return 400 if given an invalid id", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "Hey, icellusedkars here",
+    };
+    return request(app)
+      .post("/api/articles/abc/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("Bad request");
+      });
+  });
+  test("POST 400: Should return 400 if comment body is empty", () => {
+    const newComment = {
+      username: "icellusedkars",
+      body: "",
+    };
+    return request(app)
+      .post("/api/articles/abc/comments")
+      .send(newComment)
+      .expect(400)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("comment is empty");
       });
   });
 });
