@@ -10,6 +10,7 @@ const {
   postNewComment,
   updateVotes,
   deleteComment,
+  getUsers,
 } = require("./controllers/controller");
 
 const app = express();
@@ -27,6 +28,8 @@ app.get("/api/articles/:article_id", getArticleId);
 app.get("/api/articles", getAllArticles);
 
 app.get("/api/articles/:article_id/comments", getCommentsById);
+
+app.get("/api/users", getUsers);
 
 app.post("/api/articles/:article_id/comments", postNewComment);
 

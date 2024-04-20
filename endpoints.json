@@ -55,5 +55,47 @@
         }
       ]
     }
+  },
+  "POST /api/articles/:article_id/comments": {
+    "description": "adds new comment to given article",
+    "queries": [],
+    "exampleResponse": {
+      "username": "icellusedkars",
+      "body": "Hey, icellusedkars here"
+    }
+  },
+  "PATCH /api/articles/article_id": {
+    "description": "updates the 'votes' value of the given article",
+    "queries": [],
+    "exampleResponse": {
+      "article": {
+        "article_id": 1,
+        "title": "Living in the shadow of a great man",
+        "topic": "mitch",
+        "author": "butter_bridge",
+        "body": "I find this existence challenging",
+        "created_at": "2020-07-09T20:11:00.000Z",
+        "votes": 103,
+        "article_img_url": "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700"
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes given comment",
+    "queries": [],
+    "exampleResponse": []
+  },
+  "GET /api/users": {
+    "description": "returns all users",
+    "queries": ["name", "username"],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "butter_bridge",
+          "name": "jonny",
+          "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+      ]
+    }
   }
 }

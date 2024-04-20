@@ -260,6 +260,16 @@ describe("/api/articles/:article_id", () => {
       .then(({ body }) => {
         const { article } = body;
         expect(article.votes).toBe(103);
+        expect(article).toMatchObject({
+          article_id: expect.any(Number),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
       });
   });
   test("PATCH 200: Should update selected articles votes and return it when inc_votes is negative", () => {
@@ -271,6 +281,16 @@ describe("/api/articles/:article_id", () => {
       .then(({ body }) => {
         const { article } = body;
         expect(article.votes).toBe(97);
+        expect(article).toMatchObject({
+          article_id: expect.any(Number),
+          title: expect.any(String),
+          topic: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+        });
       });
   });
   test("PATCH 404: Should return a 404 when article id isn't found", () => {
@@ -328,6 +348,26 @@ describe("/api/comments/:comment_id", () => {
       .then(({ body }) => {
         const { message } = body;
         expect(message).toBe("Bad request");
+      });
+  });
+});
+
+describe("/api/users", () => {
+  test("GET 200: Should return an array of all users", () => {
+    return request(app)
+      .get("/api/users")
+      .expect(200)
+      .then(({ body }) => {
+        const { users } = body;
+        console.log(users);
+        expect(users.length).toBe(4);
+        users.forEach((user) => {
+          expect(user).toMatchObject({
+            username: expect.any(String),
+            name: expect.any(String),
+            avatar_url: expect.any(String),
+          });
+        });
       });
   });
 });
