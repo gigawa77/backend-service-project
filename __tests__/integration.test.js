@@ -249,3 +249,61 @@ describe("/api/articles/:article_id/comments", () => {
       });
   });
 });
+
+describe("/api/articles/:article_id", () => {
+  test("PATCH 200: Should update selected articles votes and return it", () => {
+    const votes = { inc_votes: 3 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(votes)
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article.votes).toBe(103);
+      });
+  });
+  test("PATCH 200: Should update selected articles votes and return it when inc_votes is negative", () => {
+    const votes = { inc_votes: -3 };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(votes)
+      .expect(200)
+      .then(({ body }) => {
+        const { article } = body;
+        expect(article.votes).toBe(97);
+      });
+  });
+  test("PATCH 404: Should return a 404 when article id isn't found", () => {
+    const votes = { inc_votes: 3 };
+    return request(app)
+      .patch("/api/articles/999")
+      .send(votes)
+      .expect(404)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("article not found");
+      });
+  });
+  test("PATCH 400: Should return a 400 when article id isn't valid", () => {
+    const votes = { inc_votes: 3 };
+    return request(app)
+      .patch("/api/articles/abc")
+      .send(votes)
+      .expect(400)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("Bad request");
+      });
+  });
+  test("PATCH 400: Should return a 400 when inc_votes is not a number", () => {
+    const votes = { inc_votes: "abc" };
+    return request(app)
+      .patch("/api/articles/1")
+      .send(votes)
+      .expect(400)
+      .then(({ body }) => {
+        const { message } = body;
+        expect(message).toBe("Bad request");
+      });
+  });
+});

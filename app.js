@@ -8,6 +8,7 @@ const {
   getAllArticles,
   getCommentsById,
   postNewComment,
+  updateVotes,
 } = require("./controllers/controller");
 
 const app = express();
@@ -27,6 +28,8 @@ app.get("/api/articles", getAllArticles);
 app.get("/api/articles/:article_id/comments", getCommentsById);
 
 app.post("/api/articles/:article_id/comments", postNewComment);
+
+app.patch("/api/articles/:article_id", updateVotes);
 
 app.all("*", (req, res, next) => {
   res.status(404).send({ message: "Endpoint not found" });

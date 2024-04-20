@@ -75,3 +75,22 @@ exports.insertComment = (comment, id) => {
       return rows[0];
     });
 };
+
+exports.updateArticleVotes = (votes, id) => {
+  return db
+    .query(
+      `
+    UPDATE articles
+    SET votes = votes + $1
+    WHERE article_id = $2
+    RETURNING*;
+    `,
+      [votes, id]
+    )
+    .then(({ rows }) => {
+      if (rows.length === 0) {
+        return Promise.reject({ status: 404, message: "article not found" });
+      }
+      return rows[0];
+    });
+};

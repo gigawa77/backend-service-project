@@ -5,6 +5,7 @@ const {
   getArticles,
   getComments,
   insertComment,
+  updateArticleVotes,
 } = require("../models/model");
 const endpoints = require("../endpoints.json");
 
@@ -57,6 +58,16 @@ exports.postNewComment = (req, res, next) => {
   insertComment(comment, id)
     .then((comment) => {
       res.status(201).send({ comment });
+    })
+    .catch(next);
+};
+
+exports.updateVotes = (req, res, next) => {
+  const votes = req.body.inc_votes;
+  const id = req.params.article_id;
+  updateArticleVotes(votes, id)
+    .then((article) => {
+      res.status(200).send({ article });
     })
     .catch(next);
 };
