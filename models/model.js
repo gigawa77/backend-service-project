@@ -33,8 +33,6 @@ exports.getCorrectArticle = (id) => {
 };
 
 exports.getArticles = (topic = null) => {
-  const validTopics = ["mitch", "cats", "test"];
-
   let sqlString = `
     SELECT articles.*, COUNT(comments.article_id)::INT AS comment_count
     FROM articles
@@ -44,10 +42,6 @@ exports.getArticles = (topic = null) => {
   const queries = [];
 
   if (topic !== null) {
-    if (!validTopics.includes(topic)) {
-      return Promise.reject({ status: 400, message: "Invalid query value" });
-    }
-
     sqlString += `WHERE topic = $1`;
     queries.push(topic);
   }

@@ -64,6 +64,12 @@ app.use((err, req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
+  if (err.code === "23502") {
+    res.status(400).send({ message: "comment is empty" });
+  }
+});
+
+app.use((err, req, res, next) => {
   console.log(err);
   res.sendStatus(500);
 });

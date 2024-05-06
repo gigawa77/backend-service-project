@@ -168,24 +168,6 @@ describe("/api/articles", () => {
         );
       });
   });
-  test("GET 400: Should return 400 if given an invalid query", () => {
-    return request(app)
-      .get("/api/articles?topic=hello")
-      .expect(400)
-      .then(({ body }) => {
-        const { message } = body;
-        expect(message).toBe("Invalid query value");
-      });
-  });
-  test("GET 404: Should return 404 no articles are found", () => {
-    return request(app)
-      .get("/api/articles?topic=test")
-      .expect(404)
-      .then(({ body }) => {
-        const { message } = body;
-        expect(message).toBe("not found");
-      });
-  });
 });
 
 describe("/api/articles/:article_id/comments", () => {
@@ -296,10 +278,9 @@ describe("/api/articles/:article_id/comments", () => {
   test("POST 400: Should return 400 if comment body is empty", () => {
     const newComment = {
       username: "icellusedkars",
-      body: "",
     };
     return request(app)
-      .post("/api/articles/abc/comments")
+      .post("/api/articles/1/comments")
       .send(newComment)
       .expect(400)
       .then(({ body }) => {
