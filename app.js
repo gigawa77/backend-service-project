@@ -44,15 +44,17 @@ app.all("*", (req, res, next) => {
 app.use((err, req, res, next) => {
   if (err.status && err.message) {
     res.status(err.status).send({ message: err.message });
+  } else {
+    next(err);
   }
-  next(err);
 });
 
 app.use((err, req, res, next) => {
   if (err.code === "23503") {
     res.status(404).send({ message: "not found" });
+  } else {
+    next(err);
   }
-  next(err);
 });
 
 app.use((err, req, res, next) => {
@@ -66,6 +68,8 @@ app.use((err, req, res, next) => {
 app.use((err, req, res, next) => {
   if (err.code === "23502") {
     res.status(400).send({ message: "comment is empty" });
+  } else {
+    next(err);
   }
 });
 
